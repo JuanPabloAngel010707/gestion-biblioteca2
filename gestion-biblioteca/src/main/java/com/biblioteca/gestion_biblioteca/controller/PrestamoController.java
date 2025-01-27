@@ -1,22 +1,20 @@
 // Declaración del paquete al que pertenece este archivo.
 package com.biblioteca.gestion_biblioteca.controller;
 
-import com.biblioteca.gestion_biblioteca.dto.DevolucionDTO;
-import com.biblioteca.gestion_biblioteca.model.Carrito;
-import com.biblioteca.gestion_biblioteca.model.Factura;
-// Importa las clases necesarias para trabajar con los préstamos y los servicios asociados.
+import com.biblioteca.gestion_biblioteca.dto.DevolucionDTO; // Importa la clase para manejar datos de devoluciones.
+import com.biblioteca.gestion_biblioteca.model.Carrito; // Importa la clase Carrito.
+import com.biblioteca.gestion_biblioteca.model.Factura; // Importa la clase Factura.
 import com.biblioteca.gestion_biblioteca.model.Prestamo; // Importa la clase Prestamo.
 import com.biblioteca.gestion_biblioteca.service.PrestamoService; // Importa el servicio de préstamos.
 
-import jakarta.servlet.http.HttpSession;
-
+import jakarta.servlet.http.HttpSession; // Importa la clase para manejar sesiones HTTP.
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus; // Importa los códigos de estado HTTP.
 import org.springframework.http.ResponseEntity; // Importa la clase para encapsular respuestas HTTP.
 import org.springframework.web.bind.annotation.*; // Importa las anotaciones necesarias para trabajar con REST.
 
-import java.util.List; // Importa las colecciones para manejar listas.
-import java.util.Optional; // Importa Optional para manejar valores nulos.
+import java.util.List; // Importa la clase para manejar listas.
+import java.util.Optional; // Importa la clase Optional para manejar valores nulos.
 
 @RestController // Indica que esta clase es un controlador de una API REST.
 @RequestMapping("/api/prestamos") // Define la ruta base para las peticiones a este controlador.
@@ -78,33 +76,38 @@ public class PrestamoController {
         return new ResponseEntity<>(prestamos, HttpStatus.OK);
     }
 
-    
+
+    // Método para pedir un préstamo de los libros del carrito de un usuario.
     @PostMapping // Mapea las peticiones POST a esta ruta.
     public ResponseEntity<String> pedirPrestamo(@RequestParam String dniUsuario, HttpSession session) {
         try {
-        	Carrito carrito = (Carrito) session.getAttribute("carrito");
+            // Obtiene el carrito de la sesión.
+            Carrito carrito = (Carrito) session.getAttribute("carrito");
+            // Si el carrito está vacío o no existe, devuelve un código de estado 400 (Bad Request).
             if (carrito == null || carrito.obtenerLibros().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El carrito está vacío o no existe en la sesión.");
             }
+            // Llama al servicio para crear un nuevo préstamo con los libros del carrito.
             prestamoService.crearPrestamo(carrito, dniUsuario);
-            
-            return new ResponseEntity<>( HttpStatus.CREATED);
+            // Devuelve un código de estado 201 (Created) si el préstamo se realiza con éxito.
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            
+            // Si ocurre un error, devuelve un código 400 (Bad Request) con el mensaje de error.
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    
-    @PostMapping("/{dniUsuario}/devolver") 
+
+    // Método para devolver los libros de un préstamo asociado a un usuario.
+    @PostMapping("/{dniUsuario}/devolver") // Mapea las peticiones POST a la ruta "/{dniUsuario}/devolver".
     public ResponseEntity<?> devolverPrestamo(@PathVariable String dniUsuario, @RequestBody List<DevolucionDTO> devoluciones) {
         try {
-            
-        	Factura factura = prestamoService.devolverPrestamo(dniUsuario, devoluciones);
-            
-            return new ResponseEntity<>(factura,HttpStatus.OK);
+            // Llama al servicio para devolver los libros del préstamo y genera una factura.
+            Factura factura = prestamoService.devolverPrestamo(dniUsuario, devoluciones);
+            // Devuelve la factura generada con un código de estado 200 (OK).
+            return new ResponseEntity<>(factura, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            
+            // Si ocurre un error, devuelve un código 400 (Bad Request) con el mensaje de error.
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

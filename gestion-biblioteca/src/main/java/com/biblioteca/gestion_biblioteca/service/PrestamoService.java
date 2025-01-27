@@ -35,8 +35,11 @@ public interface PrestamoService {
     // Método para verificar si un préstamo existe en la base de datos. Devuelve un valor booleano.
     Boolean prestamoExistente(Long id);
 
-    
+    // Método para procesar la devolución de préstamos, generando una factura.
+    // Recibe el DNI del usuario y una lista de objetos DevolucionDTO que contienen detalles de la devolución.
     Factura devolverPrestamo(String dniUsuario, List<DevolucionDTO> librosDevueltos);
-    
+
+    // Método para validar un préstamo con base en los datos de una devolución.
+    // Recibe un préstamo, un objeto DevolucionDTO y el DNI del usuario.
     void validarPrestamoConDevolucion(Prestamo prestamo, DevolucionDTO devolucionDTO, String dniUsuario);
 }

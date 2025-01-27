@@ -6,7 +6,6 @@ import com.biblioteca.gestion_biblioteca.model.Usuario; // Importa la clase Usua
 import com.biblioteca.gestion_biblioteca.service.UsuarioService; // Importa el servicio de usuarios.
 
 import jakarta.validation.Valid; // Importa la validación de datos con @Valid.
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus; // Importa los códigos de estado HTTP.
 import org.springframework.http.ResponseEntity; // Importa la clase para encapsular respuestas HTTP.

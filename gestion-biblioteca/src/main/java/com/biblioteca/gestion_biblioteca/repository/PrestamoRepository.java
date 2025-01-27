@@ -33,7 +33,12 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     // Método personalizado para encontrar préstamos por el ISBN de un libro y estado.
     // 'findByLibroIsbnAndEstado' devuelve una lista de préstamos de un libro con el ISBN proporcionado y que tienen el estado especificado.
     List<Prestamo> findByLibroIsbnAndEstado(String isbnLibro, String estado);
-    
+
+    // Método personalizado para encontrar préstamos por el ISBN de un libro, el DNI de un usuario y el estado.
+    // 'findByLibroIsbnAndUsuarioDniAndEstado' devuelve una lista de préstamos que cumplen las siguientes condiciones:
+        // - El libro tiene el ISBN proporcionado.
+        // - El usuario tiene el DNI especificado.
+        // - El préstamo tiene el estado indicado.
     List<Prestamo> findByLibroIsbnAndUsuarioDniAndEstado(String isbnLibro, String dniUsuario, String estado);
 }
 
